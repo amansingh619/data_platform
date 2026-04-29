@@ -1,0 +1,6 @@
+customer_id,name,email,signup_date,country
+1,Aman Singh,aman@gmail.com,2023-01-10,India
+2,Riya Sharma,riya@gmail.com,2023-02-15,India
+3,John Doe,john@gmail.com,2023-03-05,USA
+4,Jane Smith,jane@gmail.com,2023-03-20,UK
+5,Alex Wong,alex@gmail.com,2023-04-10,Singapore

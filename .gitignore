@@ -1,7 +1,5 @@
 # Virtual environment
 data_platform_env/
-venv/
-env/
 
 # Environment variables
 *.yaml
@@ -15,6 +13,3 @@ __pycache__/
 
 # VS Code
 .vscode/
-
-# Build files
-data/

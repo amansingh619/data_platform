@@ -1,0 +1,11 @@
+customer_id,flag_type,flag_value,flag_date
+1,high_velocity,1,2024-04-02
+2,geo_mismatch,1,2024-04-03
+3,large_txn,1,2024-04-04
+4,high_velocity,1,2024-04-05
+5,large_txn,1,2024-04-06
+1,large_txn,1,2024-04-07
+2,high_velocity,1,2024-04-07
+3,geo_mismatch,1,2024-04-08
+4,large_txn,1,2024-04-08
+5,high_velocity,1,2024-04-09

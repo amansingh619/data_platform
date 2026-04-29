@@ -1,56 +1,56 @@
 import os
 import sys
 from pathlib import Path
-import pandas as pd
+import logging
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from connectors.postgres_connector import PostgresConnector 
 from connectors.config import ConfigLoader  
+from data_processing import DataProcessing
 
+def setup_logger(logfile: str = None):
+    """Setting up logger """
+    logger = logging.getLogger("DataExtractor")
+    logger.setLevel(logging.DEBUG)
+    logger.handlers.clear()  # Clear any existing handlers
 
-def get_table_name(file_name: str) -> str:
-    """
-    Maps CSV file name to table name.
-    Example: users.csv -> users
-    """
-    return file_name.replace(".csv", "")
+    # File handler
+    if logfile:
+        file_handler = logging.FileHandler(logfile)
+        file_handler.setLevel(logging.DEBUG)
+        file_formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
 
+    # Console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
+    console_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    console_handler.setFormatter(console_formatter)
+    logger.addHandler(console_handler)
+
+    return logger
 
 def main():
+    logger = setup_logger()
     LOAD_ORDER = [
-        "users.csv",
-        "products.csv",
-        "orders.csv",
-        "order_items.csv"
+        "customers.csv",
+        "transactions.csv",
+        "accounts.csv",
+        "risk_flags.csv"
     ]
     config = ConfigLoader()
+    logger.info(f"Succesfull read the config file")
+
     data_dir = config.get('oracle')["data_path"]
-
-    # Initialize connector
     connector = PostgresConnector(config.get("postgres")["connection_string"])
+    process_data = DataProcessing(data_dir, connector, logger)
 
-    # Loop through all CSV files in data directory
-    for file in LOAD_ORDER:
-        if file.endswith(".csv"):
-            file_path = os.path.join(data_dir, file)
-
-            print(f"Processing file: {file}")
-
-            # Read CSV
-            df = pd.read_csv(file_path)
-            if df.empty:
-                continue
-
-            # Get table name
-            table_name = get_table_name(file)
-
-            # Write to DB
-            connector.write(
-                df,
-                table=table_name,
-                mode="append"  # or "replace" for fresh load
-            )
-
-            print(f"Loaded {file} into table {table_name}\n")
+    process_data.bronze_load(LOAD_ORDER)
+    process_data.silver_transform()
+    process_data.gold_risk()
+    process_data.gold_analytics()
 
 
 if __name__ == "__main__":
