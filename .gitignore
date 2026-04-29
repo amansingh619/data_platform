@@ -1,0 +1,20 @@
+# Virtual environment
+data_platform_env/
+venv/
+env/
+
+# Environment variables
+*.yml
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# Build files
+data/
