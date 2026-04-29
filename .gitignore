@@ -4,7 +4,7 @@ venv/
 env/
 
 # Environment variables
-*.yml
+*.yaml
 
 # Python cache
 __pycache__/

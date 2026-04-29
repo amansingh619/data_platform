@@ -11,13 +11,11 @@ class PostgresConnector(BaseConnector):
         with self.engine.connect() as conn:
             return pd.read_sql(query, conn)
 
-    def write(
-        self,
-        df: pd.DataFrame,
-        table_name: str,
-        if_exists: str = "append",
-        index: bool = False,
-    ):
+    def write(self, df, *args, **kwargs):
+        table_name = kwargs.get("table")
+        if_exists = kwargs.get("mode", "append")
+        index = kwargs.get("index", False)
+
         df.to_sql(
             table_name,
             self.engine,
